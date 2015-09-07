@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+{% load staticfiles %}
+<link href="{% static "bootstrap/css/bootstrap.css" %}" rel="stylesheet">
+<link href="{% static "bootstrap/css/bootstrap-responsive.css" %}" rel="stylesheet">
+<script src="{% static "bootstrap/js/bootstrap.js" %}"></script>
+<body>
+    {% block content %}
+
+    {% for term in terms %}
+    <table class='table table-bordered' border=1px>
+   	<tr>
+    <th id="date">Дата закрытия</th>
+    <th id="term">Срок</th>
+    <th id="kpi">KPI</th>
+    <th id="aim_name">Задача</th>
+    <th id="aim_value">Значение</th>
+    <th id="aim_diff">Разница</th>
+    <th id="aim_comm">Комментарий</th>
+	<tr>
+		{% for kpi in term.kpis %}
+			{% for aim in kpi.aims %}
+			<tr>
+				<td>{{ term.date }}</td>
+				<td>{{ term.term }}</td>
+				<td>{{ kpi.name }}</td>
+				<td>{{ aim.aim_name }}</td>
+				<td>{{ aim.value }}</td>
+				{% if aim.get_difference_display == 'Норма' %}
+					<td bgcolor = 'yellow'>{{ aim.get_difference_display}}</td>
+				{% elif aim.get_difference_display == 'Отрицательно' %}
+					<td bgcolor = 'red'>{{ aim.get_difference_display}}</td>
+				{% elif aim.get_difference_display == 'Положительно'%}
+					<td bgcolor = 'green'>{{ aim.get_difference_display}}</td>
+				{% endif %}	
+				<td>{{ aim.commentary }}</td>
+			</tr>
+			{% endfor %}
+		
+		{% endfor %}
+
+	<p></p>
+	</table>
+	{% endfor %}
+
+    {% endblock %}
+
+
+    <form action="/accounts/logout/" method="get">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Logout" />
+</form>
+</body>
+</html>
